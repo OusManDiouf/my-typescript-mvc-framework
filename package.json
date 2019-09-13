@@ -4,12 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html"
+    "start": "parcel index.html",
+    "test": "./node_modules/mocha/bin/mocha --watch",
+    "server": "json-server --watch db.json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "mocha": "^6.2.0",
     "typescript": "^3.6.3"
+  },
+  "dependencies": {
+    "@types/node": "^12.7.5",
+    "axios": "^0.19.0"
   }
 }
