@@ -1,58 +1,68 @@
-export interface UserProps {
-  name?: string;
-  age?: number;
-}
+import { UserProps } from "./UserProps";
+import { Eventing } from "./Eventing";
+import { Sync } from "./Sync";
+import { Attributes } from "./models/Attributes";
+import { AxiosPromise, AxiosResponse } from "axios";
+
+const URL: string = "http://localhost:3000/users";
+
 export type Callback = () => void;
 export class User {
-  public events: Map<string, Callback[]> = new Map<string, Callback[]>();
-  // public events: { [key: string]: Callback[] } = {};
-  constructor(private data: UserProps) {}
+  private events: Eventing = new Eventing();
+  private sync: Sync<UserProps> = new Sync(URL);
+  private attributes: Attributes<UserProps>;
+  constructor(private userProps: UserProps) {
+    this.attributes = new Attributes<UserProps>(this.userProps);
+  }
 
-  // TODO: REFACTORISABLE!
-  get(propName: string): string | number | undefined {
-    if (propName == "name") {
-      return this.data.name;
-    } else if (propName == "age") {
-      return this.data.age;
-    } else {
-      return new Error(`${propName} n'est pas un prop valide de User!`).message;
+  //Eventing delegates
+  get on() {
+    // return this.events.on.bind(this.events);
+    return this.events.on; // NOW RETURN AN ARROW FUNCTION
+  }
+  get trigger() {
+    return this.events.trigger.bind(this.events);
+    // return this.events.trigger;  // NOW RETURN AN ARROW FUNCTION
+  }
+  //Sync delegates
+  fetch(): void {
+    // debugger
+    const id = this.get("id");
+
+    if (typeof id !== "number") {
+      throw new Error("Cannot fetch without and id");
     }
+
+    this.sync
+      .fetch(id)
+      .then((response: AxiosResponse) => {
+        this.set(response.data);
+      })
+      .catch(err => {
+        throw err;
+      });
+  }
+  save(): void {
+    this.sync.save(this.attributes.getAll()).then((responce: AxiosResponse) => {
+      this.events.trigger("save");
+    }).catch(() => {
+      this.events.trigger('error');
+    });
+  }
+  //Attributes delegates
+  get<K extends keyof UserProps>(key: K): UserProps[K] {
+    return this.attributes.get(key);
   }
   set(update: UserProps): void {
-    this.data = Object.assign(this.data, update);
+    // debugger
+    this.attributes.set(update);
+    this.events.trigger("change");
   }
 
-  // on(eventName: string, cb: Callback): void {
-  //   const handlers = this.events[eventName] || [];
-  //   handlers.push(cb);
-  //   this.events[eventName] = handlers;
-  // }
-  // trigger(eventName: string): void {
-  //   const handlers = this.events[eventName] || [];
-  //   handlers.forEach((cb: Callback) => {
-  //     cb();
-  //   });
-  // }
-
-  on(eventName: string, cb: Callback): void {
-
-    const handlers = this.events.get(eventName) || [];
-    handlers.push(cb);
-    this.events.set(eventName, handlers);
+  toString(): string {
+    return `User >>
+     id: ${this.attributes.get("id")},
+     name: ${this.attributes.get("name")},
+     age: ${this.attributes.get("age")}`;
   }
-  trigger(eventName: string): void {
-    // altrenative
-    // const handlers = this.events.get(eventName) || [];
-    // handlers.forEach((cb: Callback) => cb());
-
-    const handlers = this.events.get(eventName);
-    if (!handlers || handlers.length === 0) return;
-    handlers.forEach(cb => cb());
-  }
-  toString(): void {
-    console.log(`User >> name : ${this.data.name}, age: ${this.data.age}`);
-  }
-
-  //   fetch(): Promise<UserProps> {}
-  //   save(): Promise<UserProps> {}
 }

@@ -1,47 +1,65 @@
 import { User } from "./User";
-import axios from "axios";
 
-const URL: string = "http://localhost:3000/users";
 
-const user = new User({ name: "oussoulessou", age: 30 });
-user.on("event1", () => {
-  console.log("event1");
-});
-user.on("event1", () => {
-  console.log("event2");
-});
-user.on("event1", () => {
-  console.log("event3");
-});
-user.on("e", () => {
-  console.log("event3");
-});
+// ------------------------------------------------
+// TESTING FETCH METHOD
+// ------------------------------------------------
+const user1 = new User({ id: 14});
 
-console.log(user.events);
-
-user.trigger("even1");
-
-// axios.post(URL,{name : "oussou", age:25}).then((response) => {
-//   console.log(response);
+// user1.on("change", () => {
+//   console.log("User was change !");
+//   console.log(user1);
 // });
+// user1.fetch();
 
-axios.get(URL).then(data => {
-  console.log(data);
-});
+// ------------------------------------------------
+// TESTING SAVE METHOD
+// ------------------------------------------------
+// const user99 = new User({name:"anowhther", age:455});
+// user99.on("save", () => {
+//   console.log("User saved !");
+// });
+// user99.on("error", () => {
+//   console.log("Error while saving user !");
+// });
+// user99.save();
 
-axios.get(URL+"/"+"1").then(data => {
-  console.log(data);
-});
+// ------------------------------------------------
 
 
 
-// user.set({ name: "zepek", age: 25 });
-// console.log(user.toString());
+// const u = new User({ name: "alicia", age: 45 });
+// // u.sync.save();
 //
-// console.log(user.get("name"));
-// console.log(user.get("age"));
-// console.log(user.get("ag"));
-// user.trigger("event1");
+// //recupére un user dans la bd via son id et enregistre les données retrouvées dans l'objet user courrant
+// const u2 = new User({ id: 6 });
+// // u2.sync.fetch(6).then(response => {
+// //   let { id, name, age } = response.data;
+// //   console.log("Fetched user: " + id + " " + name + " " + age);
+// // });
+// //
+// // setTimeout(() => {
+// //   console.log(u2);
+// // }, 4000);
+//
 
-//saving user
-// user.save();
+// -------------------------------------------------------------
+const u3 = new User({ id: 9, name: "lynda", age: 24 });
+u3.on("change", () => {
+  console.log("User was change !");
+  console.log(u3);
+});
+// // u3.sync.save(u3.data).then(response => {
+// //   console.log("DAta SAved: " + response.data);
+// // });
+// u3.save({ id: 14, name: "KILOWAT", age: 11111111}).then(response => {
+//   u3.set(response.data);
+// });
+//
+//
+u3.fetch();
+
+setTimeout(() => {
+  console.log("DAta SAved Async \n" + u3);
+},5000);
+
