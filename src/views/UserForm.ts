@@ -1,7 +1,15 @@
 import { User } from "../User";
 
 export class UserForm {
-  constructor(private parent: Element, private model: User) {}
+  constructor(private parent: Element, private model: User) {
+    this.bindModel();
+  }
+
+  bindModel() {
+    this.model.on("change", () => {
+      this.render();
+    });
+  }
 
   template(): string {
     return `
@@ -20,10 +28,9 @@ export class UserForm {
 
   eventMap(): { [key: string]: () => void } {
     return {
-      "click:.set-age": this.onSetAgeClick,
+      "click:.set-age": this.onSetAgeClick
     };
   }
-
 
   bindEvent(fragment: DocumentFragment): void {
     const eventMap = this.eventMap();
@@ -38,6 +45,7 @@ export class UserForm {
   }
 
   render(): void {
+    this.parent.innerHTML = "";
     const templateElement: HTMLTemplateElement = document.createElement(
       "template"
     );
@@ -48,7 +56,7 @@ export class UserForm {
     this.parent.append(templateElement.content);
   }
 
-  onSetAgeClick = ():void  =>  {
+  onSetAgeClick = (): void => {
     this.model.setRandomAge();
-  }
+  };
 }

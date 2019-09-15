@@ -2241,9 +2241,20 @@ function () {
     this.onSetAgeClick = function () {
       _this.model.setRandomAge();
     };
+
+    this.bindModel();
   }
 
   _createClass(UserForm, [{
+    key: "bindModel",
+    value: function bindModel() {
+      var _this2 = this;
+
+      this.model.on("change", function () {
+        _this2.render();
+      });
+    }
+  }, {
     key: "template",
     value: function template() {
       return "\n        <div>\n          <h1>User Form</h1>\n          <input/>\n          <button class=\"set-age\">Set random Age</button>\n          <button>clickMe</button>\n          <hr>\n          <h2>Nom: ".concat(this.model.get("name"), "</h2>\n          <h2>Nom: ").concat(this.model.get("age"), "</h2>\n          <hr>\n        </div>\n        ");
@@ -2278,6 +2289,7 @@ function () {
   }, {
     key: "render",
     value: function render() {
+      this.parent.innerHTML = "";
       var templateElement = document.createElement("template");
       templateElement.innerHTML = this.template();
       this.bindEvent(templateElement.content);
