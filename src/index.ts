@@ -88,7 +88,8 @@ import { UserForm } from "./views/UserForm";
 // Template element Test
 
 const rootElement = document.querySelector("#root");
+const user = User.buildUser({ name: "zooulou", age: 444 });
 if (rootElement) {
-  const userForm = new UserForm(rootElement);
+  const userForm = new UserForm(rootElement, user);
   userForm.render();
 }

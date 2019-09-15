@@ -1,26 +1,29 @@
+import { User } from "../User";
+
 export class UserForm {
-  constructor(private parent: Element) {}
+  constructor(private parent: Element, private model: User) {}
 
   template(): string {
     return `
         <div>
           <h1>User Form</h1>
           <input/>
+          <button class="set-age">Set random Age</button>
           <button>clickMe</button>
+          <hr>
+          <h2>Nom: ${this.model.get("name")}</h2>
+          <h2>Nom: ${this.model.get("age")}</h2>
+          <hr>
         </div>
         `;
   }
 
   eventMap(): { [key: string]: () => void } {
     return {
-      "click:button": this.onButonClick,
-      "mouseover:h1": this.onHeaderHover,
+      "click:.set-age": this.onSetAgeClick,
     };
   }
 
-  onButonClick(): void {
-    console.log("click");
-  }
 
   bindEvent(fragment: DocumentFragment): void {
     const eventMap = this.eventMap();
@@ -45,7 +48,7 @@ export class UserForm {
     this.parent.append(templateElement.content);
   }
 
-  private onHeaderHover() {
-    console.log("onHeaderHover on h1");
+  private onSetAgeClick() {
+    console.log("button clicked !");
   }
 }
