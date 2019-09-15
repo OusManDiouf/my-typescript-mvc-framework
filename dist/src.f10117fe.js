@@ -2180,7 +2180,15 @@ function (_Model_1$Model) {
     return _possibleConstructorReturn(this, _getPrototypeOf(User).apply(this, arguments));
   }
 
-  _createClass(User, null, [{
+  _createClass(User, [{
+    key: "setRandomAge",
+    value: function setRandomAge() {
+      var age = Math.round(Math.random() * 100);
+      this.set({
+        age: age
+      });
+    }
+  }], [{
     key: "buildUser",
     value: function buildUser(attrs) {
       return new User(new Attributes_1.Attributes(attrs), new Eventing_1.Eventing(), new ApiSync_1.ApiSync(rootUrl));
@@ -2223,10 +2231,16 @@ var UserForm =
 /*#__PURE__*/
 function () {
   function UserForm(parent, model) {
+    var _this = this;
+
     _classCallCheck(this, UserForm);
 
     this.parent = parent;
     this.model = model;
+
+    this.onSetAgeClick = function () {
+      _this.model.setRandomAge();
+    };
   }
 
   _createClass(UserForm, [{
@@ -2268,11 +2282,6 @@ function () {
       templateElement.innerHTML = this.template();
       this.bindEvent(templateElement.content);
       this.parent.append(templateElement.content);
-    }
-  }, {
-    key: "onSetAgeClick",
-    value: function onSetAgeClick() {
-      console.log("button clicked !");
     }
   }]);
 

@@ -48,7 +48,7 @@ export class UserForm {
     this.parent.append(templateElement.content);
   }
 
-  private onSetAgeClick() {
-    console.log("button clicked !");
+  onSetAgeClick = ():void  =>  {
+    this.model.setRandomAge();
   }
 }
