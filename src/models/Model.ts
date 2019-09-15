@@ -1,16 +1,16 @@
 import { AxiosPromise, AxiosResponse } from "axios";
 
 
-interface ModelAttributes<T> {
+export interface ModelAttributes<T> {
   get<K extends keyof T>(key: K): T[K];
   set(update: T): void;
   getAll(): T;
 }
-interface Sync<T> {
+export interface Sync<T> {
   fetch(id: number): AxiosPromise;
   save(data: T): AxiosPromise;
 }
-interface Events {
+export interface Events {
   on(eventName: string, cb: () => void): void;
   trigger(eventName: string): void;
 }
@@ -25,15 +25,21 @@ export class Model<T extends HasID> {
     private sync: Sync<T>
   ) {}
 
-  //Eventing delegates
-  get on() {
-    // return this.events.on.bind(this.events);
-    return this.events.on; // NOW RETURN AN ARROW FUNCTION
-  }
-  get trigger() {
-    return this.events.trigger.bind(this.events);
-    // return this.events.trigger;  // NOW RETURN AN ARROW FUNCTION
-  }
+  // sucre syntaxique sur les délégués qui ne font que faire suivre l'appel
+
+  on = this.events.on;
+  trigger = this.events.trigger;
+  get = this.attributes.get;
+
+  // //Eventing delegates
+  // get on() {
+  //   // return this.events.on.bind(this.events);
+  //   return this.events.on; // NOW RETURN AN ARROW FUNCTION
+  // }
+  // get trigger() {
+  //   return this.events.trigger.bind(this.events);
+  //   // return this.events.trigger;  // NOW RETURN AN ARROW FUNCTION
+  // }
   //ApiSync delegates
   fetch(): void {
     // debugger
@@ -62,10 +68,10 @@ export class Model<T extends HasID> {
         this.events.trigger("error");
       });
   }
-  //Attributes delegates
-  get<K extends keyof T>(key: K): T[K] {
-    return this.attributes.get(key);
-  }
+  // //Attributes delegates
+  // get<K extends keyof T>(key: K): T[K] {
+  //   return this.attributes.get(key);
+  // }
   set(update: T): void {
     // debugger
     this.attributes.set(update);

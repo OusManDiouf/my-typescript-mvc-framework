@@ -1,4 +1,7 @@
 import { User } from "./User";
+import {UserCollection} from "./models/UserCollection";
+import {Eventing} from "./Eventing";
+import {Events} from "./models/Model";
 
 
 // ------------------------------------------------
@@ -67,15 +70,22 @@ import { User } from "./User";
 
 // ----------------------------------------------------------------------------------------------
 
- const user = User.buildUser({id:1});
- user.on("change", () => {
-  console.log("User props get updated !");
- });
- user.fetch();
- setTimeout(() => {
-   console.log(user);
- },3000);
+ // const user = User.buildUser({id:1});
+ // user.on("change", () => {
+ //  console.log("User props get updated !");
+ // });
+ // user.fetch();
+ // setTimeout(() => {
+ //   console.log(user);
+ // },3000);
 
+// ----------------------------------------------------------------------------------------------
+// UserCollection
+let uCol = new UserCollection("http://localhost:3000/users");
+uCol.on('change', () => {
+    console.log(uCol);
+});
+uCol.fetch();
 // ----------------------------------------------------------------------------------------------
 
 

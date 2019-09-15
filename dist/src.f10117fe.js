@@ -2004,13 +2004,25 @@ function () {
 
     this.attributes = attributes;
     this.events = events;
-    this.sync = sync;
-  } //Eventing delegates
+    this.sync = sync; // sucre syntaxique sur les délégués qui ne font que faire suivre l'appel
+
+    this.on = this.events.on;
+    this.trigger = this.events.trigger;
+    this.get = this.attributes.get;
+  } // //Eventing delegates
+  // get on() {
+  //   // return this.events.on.bind(this.events);
+  //   return this.events.on; // NOW RETURN AN ARROW FUNCTION
+  // }
+  // get trigger() {
+  //   return this.events.trigger.bind(this.events);
+  //   // return this.events.trigger;  // NOW RETURN AN ARROW FUNCTION
+  // }
+  //ApiSync delegates
 
 
   _createClass(Model, [{
     key: "fetch",
-    //ApiSync delegates
     value: function fetch() {
       var _this = this;
 
@@ -2037,30 +2049,17 @@ function () {
       }).catch(function () {
         _this2.events.trigger("error");
       });
-    } //Attributes delegates
+    } // //Attributes delegates
+    // get<K extends keyof T>(key: K): T[K] {
+    //   return this.attributes.get(key);
+    // }
 
-  }, {
-    key: "get",
-    value: function get(key) {
-      return this.attributes.get(key);
-    }
   }, {
     key: "set",
     value: function set(update) {
       // debugger
       this.attributes.set(update);
       this.events.trigger("change");
-    }
-  }, {
-    key: "on",
-    get: function get() {
-      // return this.events.on.bind(this.events);
-      return this.events.on; // NOW RETURN AN ARROW FUNCTION
-    }
-  }, {
-    key: "trigger",
-    get: function get() {
-      return this.events.trigger.bind(this.events); // return this.events.trigger;  // NOW RETURN AN ARROW FUNCTION
     }
   }]);
 
@@ -2123,14 +2122,80 @@ function (_Model_1$Model) {
 }(Model_1.Model);
 
 exports.User = User;
-},{"./Eventing":"src/Eventing.ts","./ApiSync":"src/ApiSync.ts","./models/Attributes":"src/models/Attributes.ts","./models/Model":"src/models/Model.ts"}],"src/index.ts":[function(require,module,exports) {
+},{"./Eventing":"src/Eventing.ts","./ApiSync":"src/ApiSync.ts","./models/Attributes":"src/models/Attributes.ts","./models/Model":"src/models/Model.ts"}],"src/models/UserCollection.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var User_1 = require("../User");
+
+var Eventing_1 = require("../Eventing");
+
+var axios_1 = __importDefault(require("axios"));
+
+var UserCollection =
+/*#__PURE__*/
+function () {
+  function UserCollection(rootUrl) {
+    _classCallCheck(this, UserCollection);
+
+    this.rootUrl = rootUrl;
+    this.models = [];
+    this.events = new Eventing_1.Eventing();
+  } //delegate for Eventing
+
+
+  _createClass(UserCollection, [{
+    key: "fetch",
+    value: function fetch() {
+      var _this = this;
+
+      axios_1.default.get(this.rootUrl).then(function (response) {
+        response.data.forEach(function (value) {
+          _this.models.push(User_1.User.buildUser(value));
+        });
+
+        _this.events.trigger("change");
+      });
+    }
+  }, {
+    key: "on",
+    get: function get() {
+      return this.events.on;
+    }
+  }, {
+    key: "trigger",
+    get: function get() {
+      return this.events.trigger;
+    }
+  }]);
+
+  return UserCollection;
+}();
+
+exports.UserCollection = UserCollection;
+},{"../User":"src/User.ts","../Eventing":"src/Eventing.ts","axios":"node_modules/axios/index.js"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var User_1 = require("./User"); // ------------------------------------------------
+var UserCollection_1 = require("./models/UserCollection"); // ------------------------------------------------
 // TESTING FETCH METHOD
 // ------------------------------------------------
 // const user1 = new User({ id: 14});
@@ -2186,19 +2251,24 @@ var User_1 = require("./User"); // ---------------------------------------------
 // },5000);
 //
 // ----------------------------------------------------------------------------------------------
+// const user = User.buildUser({id:1});
+// user.on("change", () => {
+//  console.log("User props get updated !");
+// });
+// user.fetch();
+// setTimeout(() => {
+//   console.log(user);
+// },3000);
+// ----------------------------------------------------------------------------------------------
+// UserCollection
 
 
-var user = User_1.User.buildUser({
-  id: 1
+var uCol = new UserCollection_1.UserCollection("http://localhost:3000/users");
+uCol.on('change', function () {
+  console.log(uCol);
 });
-user.on("change", function () {
-  console.log("User props get updated !");
-});
-user.fetch();
-setTimeout(function () {
-  console.log(user);
-}, 3000); // ----------------------------------------------------------------------------------------------
-},{"./User":"src/User.ts"}],"../../../../.nvm/versions/node/v10.16.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+uCol.fetch(); // ----------------------------------------------------------------------------------------------
+},{"./models/UserCollection":"src/models/UserCollection.ts"}],"../../../../.nvm/versions/node/v10.16.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
