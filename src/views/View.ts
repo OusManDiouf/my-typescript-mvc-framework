@@ -1,7 +1,12 @@
-import { User } from "../User";
+// interface ModelForView {
+//   on(eventName: string, cb: () => void): void;
+//  ajout de chaque méthode du model requis par View  !!
+// }
+// export abstract class View<T extends ModelForView> {
+import { Model } from "../models/Model";
 
-export abstract class View {
-  constructor(protected parent: Element, protected model: User) {
+export abstract class View<T extends Model<K>, K> {
+  constructor(protected parent: Element, protected model: T) {
     this.bindModel();
   }
 
@@ -9,7 +14,6 @@ export abstract class View {
   abstract eventMap(): { [key: string]: () => void };
 
   bindModel() {
-
     this.model.on("change", () => {
       this.render();
     });

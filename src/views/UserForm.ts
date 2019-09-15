@@ -1,10 +1,11 @@
 import { User } from "../User";
 import {View} from "./View";
+import {UserProps} from "../UserProps";
 
-export class UserForm  extends View{
-
+export class UserForm  extends View<User,UserProps>{
 
   template(): string {
+
     return `
         <div>
           <h1>User Form</h1>
