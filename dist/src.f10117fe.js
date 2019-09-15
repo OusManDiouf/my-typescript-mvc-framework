@@ -120,6 +120,14 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"src/views/UserForm.ts":[function(require,module,exports) {
 "use strict";
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -148,7 +156,8 @@ function () {
     key: "eventMap",
     value: function eventMap() {
       return {
-        "click:button": this.onButonClick
+        "click:button": this.onButonClick,
+        "mouseover:h1": this.onHeaderHover
       };
     }
   }, {
@@ -157,11 +166,37 @@ function () {
       console.log("click");
     }
   }, {
+    key: "bindEvent",
+    value: function bindEvent(fragment) {
+      var eventMap = this.eventMap();
+
+      var _loop = function _loop(eventKey) {
+        var _eventKey$split = eventKey.split(":"),
+            _eventKey$split2 = _slicedToArray(_eventKey$split, 2),
+            eventName = _eventKey$split2[0],
+            selector = _eventKey$split2[1];
+
+        fragment.querySelectorAll(selector).forEach(function (el) {
+          return el.addEventListener(eventName, eventMap[eventKey]);
+        });
+      };
+
+      for (var eventKey in this.eventMap()) {
+        _loop(eventKey);
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       var templateElement = document.createElement("template");
       templateElement.innerHTML = this.template();
+      this.bindEvent(templateElement.content);
       this.parent.append(templateElement.content);
+    }
+  }, {
+    key: "onHeaderHover",
+    value: function onHeaderHover() {
+      console.log("onHeaderHover on h1");
     }
   }]);
 
