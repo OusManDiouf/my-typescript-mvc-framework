@@ -2337,20 +2337,25 @@ function (_View_1$View) {
       }
     };
 
+    _this.onSaveClick = function () {
+      _this.model.save();
+    };
+
     return _this;
   }
 
   _createClass(UserForm, [{
     key: "template",
     value: function template() {
-      return "\n        <div>\n          <h1>User Form</h1>\n          <input/>\n          <button class=\"set-name\">Change Name</button>\n          <button class=\"set-age\">Set random Age</button>\n          <hr>\n          <h2>Nom: ".concat(this.model.get("name"), "</h2>\n          <h2>Nom: ").concat(this.model.get("age"), "</h2>\n          <hr>\n        </div>\n        ");
+      return "\n        <div>\n          <input placeholder=\"".concat(this.model.get("name"), "\"/>\n          <button class=\"set-name\">Change Name</button>\n          <button class=\"set-age\">Set random Age</button>\n          <button class=\"save-model\">Save User</button>\n          <hr>\n        </div>\n        ");
     }
   }, {
     key: "eventMap",
     value: function eventMap() {
       return {
         "click:.set-age": this.onSetAgeClick,
-        "click:.set-name": this.onSetNameClick
+        "click:.set-name": this.onSetNameClick,
+        "click:.save-model": this.onSaveClick
       };
     }
   }]);
@@ -2483,7 +2488,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45191" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46785" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
