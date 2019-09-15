@@ -63,6 +63,7 @@ export class UserForm {
 
   private onSetNameClick = () => {
     const input = this.parent.querySelector("input");
+
     if (input) {
       const name = input.value;
       this.model.set({ name });

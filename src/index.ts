@@ -92,4 +92,6 @@ const user = User.buildUser({ name: "zooulou", age: 444 });
 if (rootElement) {
   const userForm = new UserForm(rootElement, user);
   userForm.render();
+} else {
+  throw new Error("Root Element not found !")
 }

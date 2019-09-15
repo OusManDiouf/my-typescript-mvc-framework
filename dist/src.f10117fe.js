@@ -2407,6 +2407,8 @@ var user = User_1.User.buildUser({
 if (rootElement) {
   var userForm = new UserForm_1.UserForm(rootElement, user);
   userForm.render();
+} else {
+  throw new Error("Root Element not found !");
 }
 },{"./User":"src/User.ts","./views/UserForm":"src/views/UserForm.ts"}],"../../../../.nvm/versions/node/v10.16.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
