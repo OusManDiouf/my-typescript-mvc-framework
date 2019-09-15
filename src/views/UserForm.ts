@@ -1,15 +1,8 @@
 import { User } from "../User";
+import {View} from "./View";
 
-export class UserForm {
-  constructor(private parent: Element, private model: User) {
-    this.bindModel();
-  }
+export class UserForm  extends View{
 
-  bindModel() {
-    this.model.on("change", () => {
-      this.render();
-    });
-  }
 
   template(): string {
     return `
@@ -33,29 +26,7 @@ export class UserForm {
     };
   }
 
-  bindEvent(fragment: DocumentFragment): void {
-    const eventMap = this.eventMap();
 
-    for (let eventKey in this.eventMap()) {
-      const [eventName, selector] = eventKey.split(":");
-
-      fragment
-        .querySelectorAll(selector)
-        .forEach(el => el.addEventListener(eventName, eventMap[eventKey]));
-    }
-  }
-
-  render(): void {
-    this.parent.innerHTML = "";
-    const templateElement: HTMLTemplateElement = document.createElement(
-      "template"
-    );
-
-    templateElement.innerHTML = this.template();
-    this.bindEvent(templateElement.content);
-
-    this.parent.append(templateElement.content);
-  }
 
   private onSetAgeClick = (): void => {
     this.model.setRandomAge();
