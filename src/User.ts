@@ -2,8 +2,10 @@ import { UserProps } from "./UserProps";
 import { Eventing } from "./Eventing";
 import { ApiSync } from "./ApiSync";
 import { Attributes } from "./models/Attributes";
-import { AxiosPromise, AxiosResponse } from "axios";
 import { Model } from "./models/Model";
+import {Collection} from "./models/Collection";
+
+const rootUrl = "http://localhost:3000/users";
 
 export type Callback = () => void;
 export class User extends Model<UserProps> {
@@ -11,7 +13,13 @@ export class User extends Model<UserProps> {
     return new User(
       new Attributes<UserProps>(attrs),
       new Eventing(),
-      new ApiSync<UserProps>("http://localhost:3000/users")
+      new ApiSync<UserProps>(rootUrl)
     );
+  }
+  static buildUserCollection(): Collection<User,UserProps> {
+    return new Collection<User, UserProps>(
+        rootUrl,
+        (json: UserProps) => User.buildUser(json)
+    )
   }
 }

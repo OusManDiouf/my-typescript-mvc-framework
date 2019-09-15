@@ -78,10 +78,7 @@ import { UserProps } from "./UserProps";
 
 // ----------------------------------------------------------------------------------------------
 // Collection
-let uCol = new Collection<User, UserProps>(
-  "http://localhost:3000/users",
-  (json: UserProps) => User.buildUser(json)
-);
+let uCol =User.buildUserCollection();
 uCol.on("change", () => {
   console.log(uCol);
 });
