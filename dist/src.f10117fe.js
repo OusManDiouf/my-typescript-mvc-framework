@@ -117,88 +117,54 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/User.ts":[function(require,module,exports) {
+})({"src/Eventing.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var User =
-/*#__PURE__*/
-function () {
-  // public events: { [key: string]: Callback[] } = {};
-  function User(data) {
-    _classCallCheck(this, User);
+var Eventing = function Eventing() {
+  var _this = this;
 
-    this.data = data;
-    this.events = new Map();
-  } // TODO: REFACTORISABLE!
+  _classCallCheck(this, Eventing);
 
+  this.events = new Map(); // public events: { [key: string]: Callback[] } = {};
 
-  _createClass(User, [{
-    key: "get",
-    value: function get(propName) {
-      if (propName == "name") {
-        return this.data.name;
-      } else if (propName == "age") {
-        return this.data.age;
-      } else {
-        return new Error("".concat(propName, " n'est pas un prop valide de User!")).message;
-      }
-    }
-  }, {
-    key: "set",
-    value: function set(update) {
-      this.data = Object.assign(this.data, update);
-    } // on(eventName: string, cb: Callback): void {
-    //   const handlers = this.events[eventName] || [];
-    //   handlers.push(cb);
-    //   this.events[eventName] = handlers;
-    // }
-    // trigger(eventName: string): void {
-    //   const handlers = this.events[eventName] || [];
-    //   handlers.forEach((cb: Callback) => {
-    //     cb();
-    //   });
-    // }
+  this.on = function (eventName, cb) {
+    var handlers = _this.events.get(eventName) || [];
+    handlers.push(cb);
 
-  }, {
-    key: "on",
-    value: function on(eventName, cb) {
-      var handlers = this.events.get(eventName) || [];
-      handlers.push(cb);
-      this.events.set(eventName, handlers);
-    }
-  }, {
-    key: "trigger",
-    value: function trigger(eventName) {
-      // altrenative
-      // const handlers = this.events.get(eventName) || [];
-      // handlers.forEach((cb: Callback) => cb());
-      var handlers = this.events.get(eventName);
-      if (!handlers || handlers.length === 0) return;
-      handlers.forEach(function (cb) {
-        return cb();
-      });
-    }
-  }, {
-    key: "toString",
-    value: function toString() {
-      console.log("User >> name : ".concat(this.data.name, ", age: ").concat(this.data.age));
-    }
-  }]);
+    _this.events.set(eventName, handlers);
+  };
 
-  return User;
-}();
+  this.trigger = function (eventName) {
+    // altrenative
+    // const handlers = this.events.get(eventName) || [];
+    // handlers.forEach((cb: Callback) => cb());
+    var handlers = _this.events.get(eventName);
 
-exports.User = User;
+    if (!handlers || handlers.length === 0) return;
+    handlers.forEach(function (cb) {
+      return cb();
+    });
+  }; // on(eventName: string, cb: Callback): void {
+  //   const handlers = this.events[eventName] || [];
+  //   handlers.push(cb);
+  //   this.events[eventName] = handlers;
+  // }
+  // trigger(eventName: string): void {
+  //   const handlers = this.events[eventName] || [];
+  //   handlers.forEach((cb: Callback) => {
+  //     cb();
+  //   });
+  // }
+
+};
+
+exports.Eventing = Eventing;
 },{}],"node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
 'use strict';
 
@@ -1912,8 +1878,14 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults.js","./cancel/Cancel":"node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/index.ts":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/ApiSync.ts":[function(require,module,exports) {
 "use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
@@ -1925,47 +1897,308 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var User_1 = require("./User");
-
 var axios_1 = __importDefault(require("axios"));
 
-var URL = "http://localhost:3000/users";
-var user = new User_1.User({
-  name: "oussoulessou",
-  age: 30
-});
-user.on("event1", function () {
-  console.log("event1");
-});
-user.on("event1", function () {
-  console.log("event2");
-});
-user.on("event1", function () {
-  console.log("event3");
-});
-user.on("e", function () {
-  console.log("event3");
-});
-console.log(user.events);
-user.trigger("even1"); // axios.post(URL,{name : "oussou", age:25}).then((response) => {
-//   console.log(response);
-// });
+var ApiSync =
+/*#__PURE__*/
+function () {
+  function ApiSync(rootURL) {
+    _classCallCheck(this, ApiSync);
 
-axios_1.default.get(URL).then(function (data) {
-  console.log(data);
+    this.rootURL = rootURL;
+  }
+
+  _createClass(ApiSync, [{
+    key: "fetch",
+    value: function fetch(id) {
+      return axios_1.default.get("".concat(this.rootURL, "/").concat(id));
+    }
+  }, {
+    key: "save",
+    value: function save(data) {
+      var id = data.id;
+
+      if (id) {
+        return axios_1.default.put("".concat(this.rootURL, "/").concat(id), data);
+      } else {
+        return axios_1.default.post(this.rootURL, data);
+      }
+    }
+  }]);
+
+  return ApiSync;
+}();
+
+exports.ApiSync = ApiSync;
+},{"axios":"node_modules/axios/index.js"}],"src/models/Attributes.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
-axios_1.default.get(URL + "/" + "1").then(function (data) {
-  console.log(data);
-}); // user.set({ name: "zepek", age: 25 });
-// console.log(user.toString());
+
+var Attributes =
+/*#__PURE__*/
+function () {
+  function Attributes(data) {
+    var _this = this;
+
+    _classCallCheck(this, Attributes);
+
+    this.data = data;
+
+    this.get = function (key) {
+      return _this.data[key];
+    };
+
+    this.set = function (update) {
+      Object.assign(_this.data, update);
+    };
+  }
+
+  _createClass(Attributes, [{
+    key: "getAll",
+    value: function getAll() {
+      return this.data;
+    }
+  }]);
+
+  return Attributes;
+}();
+
+exports.Attributes = Attributes; //RAPPEL: AVANT TU ECRIVAIS DU CODE COMME ÇA :=) !!
+// CONTINUNE A EVOLUER POTO ! CA FINIRA PAR PAYER UN DE CES QUATRES INCHALLAH !
+// if (propName === "name") {
+//   return this.data.name;
+// } else if (propName === "age") {
+//   return this.data.age;
+// } else if (propName === "id") {
+//   return this.data.id;
+// } else {
+//   return new Error(`${propName} n'est pas un prop valide de User!`).message;
+// }
+},{}],"src/models/Model.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var Model =
+/*#__PURE__*/
+function () {
+  function Model(attributes, events, sync) {
+    _classCallCheck(this, Model);
+
+    this.attributes = attributes;
+    this.events = events;
+    this.sync = sync;
+  } //Eventing delegates
+
+
+  _createClass(Model, [{
+    key: "fetch",
+    //ApiSync delegates
+    value: function fetch() {
+      var _this = this;
+
+      // debugger
+      var id = this.get("id");
+
+      if (typeof id !== "number") {
+        throw new Error("Cannot fetch without and id");
+      }
+
+      this.sync.fetch(id).then(function (response) {
+        _this.set(response.data);
+      }).catch(function (err) {
+        throw err;
+      });
+    }
+  }, {
+    key: "save",
+    value: function save() {
+      var _this2 = this;
+
+      this.sync.save(this.attributes.getAll()).then(function (responce) {
+        _this2.events.trigger("save");
+      }).catch(function () {
+        _this2.events.trigger("error");
+      });
+    } //Attributes delegates
+
+  }, {
+    key: "get",
+    value: function get(key) {
+      return this.attributes.get(key);
+    }
+  }, {
+    key: "set",
+    value: function set(update) {
+      // debugger
+      this.attributes.set(update);
+      this.events.trigger("change");
+    }
+  }, {
+    key: "on",
+    get: function get() {
+      // return this.events.on.bind(this.events);
+      return this.events.on; // NOW RETURN AN ARROW FUNCTION
+    }
+  }, {
+    key: "trigger",
+    get: function get() {
+      return this.events.trigger.bind(this.events); // return this.events.trigger;  // NOW RETURN AN ARROW FUNCTION
+    }
+  }]);
+
+  return Model;
+}();
+
+exports.Model = Model;
+},{}],"src/User.ts":[function(require,module,exports) {
+"use strict";
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var Eventing_1 = require("./Eventing");
+
+var ApiSync_1 = require("./ApiSync");
+
+var Attributes_1 = require("./models/Attributes");
+
+var Model_1 = require("./models/Model");
+
+var User =
+/*#__PURE__*/
+function (_Model_1$Model) {
+  _inherits(User, _Model_1$Model);
+
+  function User() {
+    _classCallCheck(this, User);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(User).apply(this, arguments));
+  }
+
+  _createClass(User, null, [{
+    key: "buildUser",
+    value: function buildUser(attrs) {
+      return new User(new Attributes_1.Attributes(attrs), new Eventing_1.Eventing(), new ApiSync_1.ApiSync("http://localhost:3000/users"));
+    }
+  }]);
+
+  return User;
+}(Model_1.Model);
+
+exports.User = User;
+},{"./Eventing":"src/Eventing.ts","./ApiSync":"src/ApiSync.ts","./models/Attributes":"src/models/Attributes.ts","./models/Model":"src/models/Model.ts"}],"src/index.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var User_1 = require("./User"); // ------------------------------------------------
+// TESTING FETCH METHOD
+// ------------------------------------------------
+// const user1 = new User({ id: 14});
+// user1.on("change", () => {
+//   console.log("User was change !");
+//   console.log(user1);
+// });
+// user1.fetch();
+// ------------------------------------------------
+// TESTING SAVE METHOD
+// ------------------------------------------------
+// const user99 = new User({name:"anowhther", age:455});
+// user99.on("save", () => {
+//   console.log("User saved !");
+// });
+// user99.on("error", () => {
+//   console.log("Error while saving user !");
+// });
+// user99.save();
+// ------------------------------------------------
+// const u = new User({ name: "alicia", age: 45 });
+// // u.sync.save();
 //
-// console.log(user.get("name"));
-// console.log(user.get("age"));
-// console.log(user.get("ag"));
-// user.trigger("event1");
-//saving user
-// user.save();
-},{"./User":"src/User.ts","axios":"node_modules/axios/index.js"}],"../../../../.nvm/versions/node/v10.16.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+// //recupére un user dans la bd via son id et enregistre les données retrouvées dans l'objet user courrant
+// const u2 = new User({ id: 6 });
+// // u2.sync.fetch(6).then(response => {
+// //   let { id, name, age } = response.data;
+// //   console.log("Fetched user: " + id + " " + name + " " + age);
+// // });
+// //
+// // setTimeout(() => {
+// //   console.log(u2);
+// // }, 4000);
+//
+// -------------------------------------------------------------
+// const u3 = new User({ id: 9, name: "lynda", age: 24 });
+// u3.on("change", () => {
+//   console.log("User was change !");
+//   console.log(u3);
+// });
+// // u3.sync.save(u3.data).then(response => {
+// //   console.log("DAta SAved: " + response.data);
+// // });
+// u3.save({ id: 14, name: "KILOWAT", age: 11111111}).then(response => {
+//   u3.set(response.data);
+// });
+//
+//
+// u3.fetch();
+//
+// setTimeout(() => {
+//   console.log("DAta SAved Async \n" + u3);
+// },5000);
+//
+// ----------------------------------------------------------------------------------------------
+
+
+var user = User_1.User.buildUser({
+  id: 1
+});
+user.on("change", function () {
+  console.log("User props get updated !");
+});
+user.fetch();
+setTimeout(function () {
+  console.log(user);
+}, 3000); // ----------------------------------------------------------------------------------------------
+},{"./User":"src/User.ts"}],"../../../../.nvm/versions/node/v10.16.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1993,7 +2226,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36105" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46065" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

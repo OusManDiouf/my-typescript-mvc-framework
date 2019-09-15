@@ -4,7 +4,7 @@ import { User } from "./User";
 // ------------------------------------------------
 // TESTING FETCH METHOD
 // ------------------------------------------------
-const user1 = new User({ id: 14});
+// const user1 = new User({ id: 14});
 
 // user1.on("change", () => {
 //   console.log("User was change !");
@@ -44,11 +44,11 @@ const user1 = new User({ id: 14});
 //
 
 // -------------------------------------------------------------
-const u3 = new User({ id: 9, name: "lynda", age: 24 });
-u3.on("change", () => {
-  console.log("User was change !");
-  console.log(u3);
-});
+// const u3 = new User({ id: 9, name: "lynda", age: 24 });
+// u3.on("change", () => {
+//   console.log("User was change !");
+//   console.log(u3);
+// });
 // // u3.sync.save(u3.data).then(response => {
 // //   console.log("DAta SAved: " + response.data);
 // // });
@@ -57,9 +57,26 @@ u3.on("change", () => {
 // });
 //
 //
-u3.fetch();
+// u3.fetch();
+//
+// setTimeout(() => {
+//   console.log("DAta SAved Async \n" + u3);
+// },5000);
+//
 
-setTimeout(() => {
-  console.log("DAta SAved Async \n" + u3);
-},5000);
+
+// ----------------------------------------------------------------------------------------------
+
+ const user = User.buildUser({id:1});
+ user.on("change", () => {
+  console.log("User props get updated !");
+ });
+ user.fetch();
+ setTimeout(() => {
+   console.log(user);
+ },3000);
+
+// ----------------------------------------------------------------------------------------------
+
+
 
