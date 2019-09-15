@@ -50,6 +50,8 @@ export abstract class View<T extends Model<K>, K> {
     this.bindEvent(templateElement.content);
     this.mapRegions(templateElement.content);
 
+    this.onRender();
+
     this.parent.append(templateElement.content);
   }
 
@@ -60,5 +62,9 @@ export abstract class View<T extends Model<K>, K> {
           const element =  fragment.querySelector(selector);
           if (element) this.regions[key] = element;
     }
+  }
+
+   onRender():void {
+
   }
 }

@@ -101,7 +101,7 @@ import {UserEdit} from "./views/UserEdit";
 const user = User.buildUser({ name: "tango", age: 444 });
 const rootElement = document.querySelector("#root");
 if (rootElement) {
-  debugger
+  // debugger
   const userEdit = new UserEdit(rootElement, user);
   userEdit.render();
   console.log(userEdit);
