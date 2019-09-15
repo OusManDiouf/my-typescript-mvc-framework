@@ -1,8 +1,8 @@
 import { User } from "./User";
-import {UserCollection} from "./models/UserCollection";
-import {Eventing} from "./Eventing";
-import {Events} from "./models/Model";
-
+import { Collection } from "./models/Collection";
+import { Eventing } from "./Eventing";
+import { Events } from "./models/Model";
+import { UserProps } from "./UserProps";
 
 // ------------------------------------------------
 // TESTING FETCH METHOD
@@ -28,8 +28,6 @@ import {Events} from "./models/Model";
 // user99.save();
 
 // ------------------------------------------------
-
-
 
 // const u = new User({ name: "alicia", age: 45 });
 // // u.sync.save();
@@ -67,26 +65,25 @@ import {Events} from "./models/Model";
 // },5000);
 //
 
-
 // ----------------------------------------------------------------------------------------------
 
- // const user = User.buildUser({id:1});
- // user.on("change", () => {
- //  console.log("User props get updated !");
- // });
- // user.fetch();
- // setTimeout(() => {
- //   console.log(user);
- // },3000);
+// const user = User.buildUser({id:1});
+// user.on("change", () => {
+//  console.log("User props get updated !");
+// });
+// user.fetch();
+// setTimeout(() => {
+//   console.log(user);
+// },3000);
 
 // ----------------------------------------------------------------------------------------------
-// UserCollection
-let uCol = new UserCollection("http://localhost:3000/users");
-uCol.on('change', () => {
-    console.log(uCol);
+// Collection
+let uCol = new Collection<User, UserProps>(
+  "http://localhost:3000/users",
+  (json: UserProps) => User.buildUser(json)
+);
+uCol.on("change", () => {
+  console.log(uCol);
 });
 uCol.fetch();
 // ----------------------------------------------------------------------------------------------
-
-
-

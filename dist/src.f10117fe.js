@@ -2122,7 +2122,7 @@ function (_Model_1$Model) {
 }(Model_1.Model);
 
 exports.User = User;
-},{"./Eventing":"src/Eventing.ts","./ApiSync":"src/ApiSync.ts","./models/Attributes":"src/models/Attributes.ts","./models/Model":"src/models/Model.ts"}],"src/models/UserCollection.ts":[function(require,module,exports) {
+},{"./Eventing":"src/Eventing.ts","./ApiSync":"src/ApiSync.ts","./models/Attributes":"src/models/Attributes.ts","./models/Model":"src/models/Model.ts"}],"src/models/Collection.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2141,32 +2141,31 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var User_1 = require("../User");
-
 var Eventing_1 = require("../Eventing");
 
 var axios_1 = __importDefault(require("axios"));
 
-var UserCollection =
+var Collection =
 /*#__PURE__*/
 function () {
-  function UserCollection(rootUrl) {
-    _classCallCheck(this, UserCollection);
+  function Collection(rootUrl, deserialize) {
+    _classCallCheck(this, Collection);
 
     this.rootUrl = rootUrl;
+    this.deserialize = deserialize;
     this.models = [];
     this.events = new Eventing_1.Eventing();
   } //delegate for Eventing
 
 
-  _createClass(UserCollection, [{
+  _createClass(Collection, [{
     key: "fetch",
     value: function fetch() {
       var _this = this;
 
       axios_1.default.get(this.rootUrl).then(function (response) {
         response.data.forEach(function (value) {
-          _this.models.push(User_1.User.buildUser(value));
+          _this.models.push(_this.deserialize(value));
         });
 
         _this.events.trigger("change");
@@ -2184,18 +2183,20 @@ function () {
     }
   }]);
 
-  return UserCollection;
+  return Collection;
 }();
 
-exports.UserCollection = UserCollection;
-},{"../User":"src/User.ts","../Eventing":"src/Eventing.ts","axios":"node_modules/axios/index.js"}],"src/index.ts":[function(require,module,exports) {
+exports.Collection = Collection;
+},{"../Eventing":"src/Eventing.ts","axios":"node_modules/axios/index.js"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var UserCollection_1 = require("./models/UserCollection"); // ------------------------------------------------
+var User_1 = require("./User");
+
+var Collection_1 = require("./models/Collection"); // ------------------------------------------------
 // TESTING FETCH METHOD
 // ------------------------------------------------
 // const user1 = new User({ id: 14});
@@ -2260,15 +2261,17 @@ var UserCollection_1 = require("./models/UserCollection"); // ------------------
 //   console.log(user);
 // },3000);
 // ----------------------------------------------------------------------------------------------
-// UserCollection
+// Collection
 
 
-var uCol = new UserCollection_1.UserCollection("http://localhost:3000/users");
-uCol.on('change', function () {
+var uCol = new Collection_1.Collection("http://localhost:3000/users", function (json) {
+  return User_1.User.buildUser(json);
+});
+uCol.on("change", function () {
   console.log(uCol);
 });
 uCol.fetch(); // ----------------------------------------------------------------------------------------------
-},{"./models/UserCollection":"src/models/UserCollection.ts"}],"../../../../.nvm/versions/node/v10.16.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./User":"src/User.ts","./models/Collection":"src/models/Collection.ts"}],"../../../../.nvm/versions/node/v10.16.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
