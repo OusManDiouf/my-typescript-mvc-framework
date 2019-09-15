@@ -4,6 +4,7 @@ import { Eventing } from "./Eventing";
 import { Events } from "./models/Model";
 import { UserProps } from "./UserProps";
 import { UserForm } from "./views/UserForm";
+import {UserEdit} from "./views/UserEdit";
 
 // ------------------------------------------------
 // TESTING FETCH METHOD
@@ -86,12 +87,25 @@ import { UserForm } from "./views/UserForm";
 // uCol.fetch();
 // ----------------------------------------------------------------------------------------------
 // Template element Test
+//
+// const rootElement = document.querySelector("#root");
+// const user = User.buildUser({ name: "zooulou", age: 444 });
+// if (rootElement) {
+//   const userForm = new UserForm(rootElement, user);
+//   userForm.render();
+// } else {
+//   throw new Error("Root Element not found !")
+// }
 
+//NESTING VIEW
+const user = User.buildUser({ name: "tango", age: 444 });
 const rootElement = document.querySelector("#root");
-const user = User.buildUser({ name: "zooulou", age: 444 });
 if (rootElement) {
-  const userForm = new UserForm(rootElement, user);
-  userForm.render();
+  debugger
+  const userEdit = new UserEdit(rootElement, user);
+  userEdit.render();
+  console.log(userEdit);
 } else {
   throw new Error("Root Element not found !")
 }
+

@@ -2234,11 +2234,23 @@ function () {
     _classCallCheck(this, View);
 
     this.parent = parent;
-    this.model = model;
+    this.model = model; // reference sur les elements où l'on veut imbriquer les vues
+
+    this.regions = {};
     this.bindModel();
   }
 
   _createClass(View, [{
+    key: "eventMap",
+    value: function eventMap() {
+      return {};
+    }
+  }, {
+    key: "regionMap",
+    value: function regionMap() {
+      return {};
+    }
+  }, {
     key: "bindModel",
     value: function bindModel() {
       var _this = this;
@@ -2274,7 +2286,19 @@ function () {
       var templateElement = document.createElement("template");
       templateElement.innerHTML = this.template();
       this.bindEvent(templateElement.content);
+      this.mapRegions(templateElement.content);
       this.parent.append(templateElement.content);
+    }
+  }, {
+    key: "mapRegions",
+    value: function mapRegions(fragment) {
+      var regionsMap = this.regionMap();
+
+      for (var key in regionsMap) {
+        var selector = regionsMap[key];
+        var element = fragment.querySelector(selector);
+        if (element) this.regions[key] = element;
+      }
     }
   }]);
 
@@ -2282,7 +2306,7 @@ function () {
 }();
 
 exports.View = View;
-},{}],"src/views/UserForm.ts":[function(require,module,exports) {
+},{}],"src/views/UserEdit.ts":[function(require,module,exports) {
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -2309,61 +2333,36 @@ Object.defineProperty(exports, "__esModule", {
 
 var View_1 = require("./View");
 
-var UserForm =
+var UserEdit =
 /*#__PURE__*/
 function (_View_1$View) {
-  _inherits(UserForm, _View_1$View);
+  _inherits(UserEdit, _View_1$View);
 
-  function UserForm() {
-    var _this;
+  function UserEdit() {
+    _classCallCheck(this, UserEdit);
 
-    _classCallCheck(this, UserForm);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(UserForm).apply(this, arguments));
-
-    _this.onSetAgeClick = function () {
-      _this.model.setRandomAge();
-    };
-
-    _this.onSetNameClick = function () {
-      var input = _this.parent.querySelector("input");
-
-      if (input) {
-        var name = input.value;
-
-        _this.model.set({
-          name: name
-        });
-      }
-    };
-
-    _this.onSaveClick = function () {
-      _this.model.save();
-    };
-
-    return _this;
+    return _possibleConstructorReturn(this, _getPrototypeOf(UserEdit).apply(this, arguments));
   }
 
-  _createClass(UserForm, [{
-    key: "template",
-    value: function template() {
-      return "\n        <div>\n          <input placeholder=\"".concat(this.model.get("name"), "\"/>\n          <button class=\"set-name\">Change Name</button>\n          <button class=\"set-age\">Set random Age</button>\n          <button class=\"save-model\">Save User</button>\n          <hr>\n        </div>\n        ");
+  _createClass(UserEdit, [{
+    key: "regionMap",
+    value: function regionMap() {
+      return {
+        userShow: ".user-show",
+        userForm: ".user-form"
+      };
     }
   }, {
-    key: "eventMap",
-    value: function eventMap() {
-      return {
-        "click:.set-age": this.onSetAgeClick,
-        "click:.set-name": this.onSetNameClick,
-        "click:.save-model": this.onSaveClick
-      };
+    key: "template",
+    value: function template() {
+      return "\n        <div>\n            <div class=\"user-show\"></div>\n            <div class=\"user-form\"></div>\n        </div>\n        ";
     }
   }]);
 
-  return UserForm;
+  return UserEdit;
 }(View_1.View);
 
-exports.UserForm = UserForm;
+exports.UserEdit = UserEdit;
 },{"./View":"src/views/View.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
@@ -2373,7 +2372,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var User_1 = require("./User");
 
-var UserForm_1 = require("./views/UserForm"); // ------------------------------------------------
+var UserEdit_1 = require("./views/UserEdit"); // ------------------------------------------------
 // TESTING FETCH METHOD
 // ------------------------------------------------
 // const user1 = new User({ id: 14});
@@ -2446,21 +2445,33 @@ var UserForm_1 = require("./views/UserForm"); // -------------------------------
 // uCol.fetch();
 // ----------------------------------------------------------------------------------------------
 // Template element Test
+//
+// const rootElement = document.querySelector("#root");
+// const user = User.buildUser({ name: "zooulou", age: 444 });
+// if (rootElement) {
+//   const userForm = new UserForm(rootElement, user);
+//   userForm.render();
+// } else {
+//   throw new Error("Root Element not found !")
+// }
+//NESTING VIEW
 
 
-var rootElement = document.querySelector("#root");
 var user = User_1.User.buildUser({
-  name: "zooulou",
+  name: "tango",
   age: 444
 });
+var rootElement = document.querySelector("#root");
 
 if (rootElement) {
-  var userForm = new UserForm_1.UserForm(rootElement, user);
-  userForm.render();
+  debugger;
+  var userEdit = new UserEdit_1.UserEdit(rootElement, user);
+  userEdit.render();
+  console.log(userEdit);
 } else {
   throw new Error("Root Element not found !");
 }
-},{"./User":"src/User.ts","./views/UserForm":"src/views/UserForm.ts"}],"../../../../.nvm/versions/node/v10.16.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./User":"src/User.ts","./views/UserEdit":"src/views/UserEdit.ts"}],"../../../../.nvm/versions/node/v10.16.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2488,7 +2499,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46785" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "32845" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

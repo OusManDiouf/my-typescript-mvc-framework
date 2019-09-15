@@ -6,12 +6,22 @@
 import { Model } from "../models/Model";
 
 export abstract class View<T extends Model<K>, K> {
+  // reference sur les elements où l'on veut imbriquer les vues
+  regions: { [key: string]: Element } = {};
+
   constructor(protected parent: Element, protected model: T) {
     this.bindModel();
   }
 
   abstract template(): string;
-  abstract eventMap(): { [key: string]: () => void };
+
+  eventMap(): { [key: string]: () => void } {
+    return {};
+  }
+
+  regionMap(): { [key: string]: string } {
+    return {};
+  }
 
   bindModel() {
     this.model.on("change", () => {
@@ -38,7 +48,17 @@ export abstract class View<T extends Model<K>, K> {
 
     templateElement.innerHTML = this.template();
     this.bindEvent(templateElement.content);
+    this.mapRegions(templateElement.content);
 
     this.parent.append(templateElement.content);
+  }
+
+  private mapRegions(fragment: DocumentFragment):void {
+    const regionsMap = this.regionMap();
+    for(let key in regionsMap){
+          const selector = regionsMap[key];
+          const element =  fragment.querySelector(selector);
+          if (element) this.regions[key] = element;
+    }
   }
 }
