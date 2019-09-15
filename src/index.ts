@@ -3,6 +3,7 @@ import { Collection } from "./models/Collection";
 import { Eventing } from "./Eventing";
 import { Events } from "./models/Model";
 import { UserProps } from "./UserProps";
+import { UserForm } from "./views/UserForm";
 
 // ------------------------------------------------
 // TESTING FETCH METHOD
@@ -77,10 +78,17 @@ import { UserProps } from "./UserProps";
 // },3000);
 
 // ----------------------------------------------------------------------------------------------
-// Collection
-let uCol =User.buildUserCollection();
-uCol.on("change", () => {
-  console.log(uCol);
-});
-uCol.fetch();
+// // Collection
+// let uCol =User.buildUserCollection();
+// uCol.on("change", () => {
+//   console.log(uCol);
+// });
+// uCol.fetch();
 // ----------------------------------------------------------------------------------------------
+// Template element Test
+
+const rootElement = document.querySelector("#root");
+if (rootElement) {
+  const userForm = new UserForm(rootElement);
+  userForm.render();
+}
