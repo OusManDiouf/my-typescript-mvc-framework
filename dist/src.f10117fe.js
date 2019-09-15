@@ -2242,6 +2242,18 @@ function () {
       _this.model.setRandomAge();
     };
 
+    this.onSetNameClick = function () {
+      var input = _this.parent.querySelector("input");
+
+      if (input) {
+        var name = input.value;
+
+        _this.model.set({
+          name: name
+        });
+      }
+    };
+
     this.bindModel();
   }
 
@@ -2257,13 +2269,14 @@ function () {
   }, {
     key: "template",
     value: function template() {
-      return "\n        <div>\n          <h1>User Form</h1>\n          <input/>\n          <button class=\"set-age\">Set random Age</button>\n          <button>clickMe</button>\n          <hr>\n          <h2>Nom: ".concat(this.model.get("name"), "</h2>\n          <h2>Nom: ").concat(this.model.get("age"), "</h2>\n          <hr>\n        </div>\n        ");
+      return "\n        <div>\n          <h1>User Form</h1>\n          <input/>\n          <button class=\"set-name\">Change Name</button>\n          <button class=\"set-age\">Set random Age</button>\n          <hr>\n          <h2>Nom: ".concat(this.model.get("name"), "</h2>\n          <h2>Nom: ").concat(this.model.get("age"), "</h2>\n          <hr>\n        </div>\n        ");
     }
   }, {
     key: "eventMap",
     value: function eventMap() {
       return {
-        "click:.set-age": this.onSetAgeClick
+        "click:.set-age": this.onSetAgeClick,
+        "click:.set-name": this.onSetNameClick
       };
     }
   }, {
